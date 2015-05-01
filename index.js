@@ -66,12 +66,16 @@ module.exports = function (options) {
 		jasmine.addSpecFile(resolvedPath);
 
 		cb(null, file);
-	}, function (cb) {
+	}, function () {
+		var stream = this;
 		try {
-			jasmine.addReporter(new SilentReporter(cb));
+			jasmine.addReporter(new SilentReporter(function () {
+				stream.emit('end');
+			}));
 			jasmine.execute();
 		} catch (err) {
-			cb(new gutil.PluginError('gulp-jasmine', err));
+			stream.emit('error', new gutil.PluginError('gulp-jasmine', err));
+			stream.emit('end');
 		}
 	});
 };

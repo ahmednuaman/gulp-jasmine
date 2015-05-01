@@ -57,3 +57,17 @@ it('should run the test only once even if called in succession', function (done)
 
 	stream.end();
 });
+
+it('should end the stream', function (cb) {
+	var stream = jasmine({
+		timeout: 9000,
+		verbose: true
+	});
+
+	stream.write(new gutil.File({
+		path: 'fixture.js',
+		contents: new Buffer('')
+	}));
+
+	stream.on('end', cb);
+});
